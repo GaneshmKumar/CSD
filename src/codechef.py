@@ -1,14 +1,15 @@
 """ Exteral imports """
 from bs4 import BeautifulSoup
 import requests
-import json
 
 """ Built in imports """
 from string import Template
+import sys
 
 """ Custom imports """
+from exception import ProblemNotFoundException
 import argparser
-
+import utils
 
 """ Dictionary to store url type keys """
 URL_TYPES = {
@@ -46,14 +47,13 @@ return the soup data of the given url
 """
 def get_url_data(url):
     r = requests.get(url)
-    return BeautifulSoup(r.text)
-
-"""
-returns json file content
-"""
-def load_json_file(json_file):
-    config_folder = 'config/'
-    return json.load(open(config_folder + json_file))
+    if len(r.history) == 1:
+        try:
+            raise ProblemNotFoundException("Error: There is no problem with the given code")
+        except ProblemNotFoundException, e:
+            print ''.join(e.args)
+            sys.exit()
+    return BeautifulSoup(r.text, "html.parser")
 
 if __name__ == "__main__":
     parser = argparser.init_parser()
@@ -64,9 +64,9 @@ if __name__ == "__main__":
     status_codes = map(lambda x: x.upper(), args.sc)
     problem_code = args.pc.upper()
 
-    extensions = load_json_file(CONFIG_FILES["EXTENSIONS"]) # .java, .c, etc ...
-    language_codes = load_json_file(CONFIG_FILES["LANGUAGE_CODES"]) # JAVA, C, PERL, etc ...
-    status_codes = load_json_file(CONFIG_FILES["STATUS_CODES"]) # AC, WA, TLE, etc ...
+    extensions = utils.load_config_file(CONFIG_FILES["EXTENSIONS"]) # .java, .c, etc ...
+    language_codes = utils.load_config_file(CONFIG_FILES["LANGUAGE_CODES"]) # JAVA, C, PERL, etc ...
+    status_codes = utils.load_config_file(CONFIG_FILES["STATUS_CODES"]) # AC, WA, TLE, etc ...
 
-    
-    
+    data = get_url_data(get_url(URL_TYPES['STATUS'], problem_code=problem_code))   
+
