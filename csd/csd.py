@@ -14,7 +14,10 @@ from exception import ProblemNotFoundException
 from exception import InvalidLanguageException
 from exception import InvalidStatusException
 import argparser
-import utils
+
+extensions = {"ADA":".ada","ASM":".asm","BASH":".bash","BF":".bf","C":".c","CAML":".ml","CLOJ":".clj","CLPS":".clp","COB":".cob","C++_4.3.2":".cpp","C++_6.3":".cpp","C++14":".cpp","C#":".cs","D":".d","ERL":".erl","FORT":".f","F#":".fs","GO":".go","HASK":".hs","ICK":".i","ICON":".icn","JAVA":".java","JS":".js","KOTLIN":".kt","LISP_CLISP":".lsp","LISP_SBCL":".lsp","LUA":".lua","NEM":".n","NICE":".nice","NODEJS":".js","PAS_FPC":".ps","PAS_GPC":".ps","PERL":".pl","PERL6":".pl","PHP":".php","PIKE":".pike","PRLG":".pro","PYPY":".py","PYTH":".py","PYTH_3.5":".py","RUBY":".rb","RUST":"rs","SCALA":".scala","SCM_CHICKEN":".scm","SCM_GUILE":".scm","SCM_QOBI":".scm","ST":".st","SWIFT":".swift","TCL":".tcl","TEXT":".txt","WSPC":".WSPC"}
+language_codes = {"ALL":"All","ADA":7,"ASM":13,"BASH":28,"BF":12,"C":11,"CAML":8,"CLOJ":111,"CLPS":14,"COB":118,"C++_4.3.2":41,"C++_6.3":1,"C++14":44,"C#":27,"D":20,"ERL":36,"FORT":5,"F#":124,"GO":114,"HASK":21,"ICK":9,"ICON":16,"JAVA":10,"JS":35,"KOTLIN":47,"LISP_CLISP":32,"LISP_SBCL":31,"LUA":26,"NEM":30,"NICE":25,"NODEJS":56,"PAS_FPC":22,"PAS_GPC":2,"PERL":3,"PERL6":54,"PHP":29,"PIKE":19,"PRLG":15,"PYPY":99,"PYTH":4,"PYTH 3.5":116,"RUBY":17,"RUST":93,"SCALA":39,"SCM_CHICKEN":97,"SCM_GUILE":33,"SCM_QOBI":18,"ST":23,"SWIFT":85,"TCL":38,"TEXT":62,"WSPC":6}
+status_codes = {"ALL":"All","AC":15,"WA":14,"TLE":13,"RTE":12,"CTE":11}
 
 """ Dictionary to store url type keys """
 URL_TYPES = {
@@ -167,10 +170,6 @@ def main():
     languages = map(lambda x: x.upper(), args.l)
     status = map(lambda x: x.upper(), args.sc)
     problem_code = args.pc.upper()
-
-    extensions = utils.load_config_file(CONFIG_FILES["EXTENSIONS"]) # .java, .c, etc ...
-    language_codes = utils.load_config_file(CONFIG_FILES["LANGUAGE_CODES"]) # JAVA, C, PERL, etc ...
-    status_codes = utils.load_config_file(CONFIG_FILES["STATUS_CODES"]) # AC, WA, TLE, etc ...
 
     get_solutions(pages, languages, status, problem_code, language_codes, status_codes, extensions)
 
