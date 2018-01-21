@@ -11,7 +11,7 @@ def init_parser():
     parser.add_argument(
         '-pc', 
         type=str, 
-        help='The unique code for the problem', 
+        help='The unique problem code', 
         required=True) 
 
     #page    
@@ -27,14 +27,14 @@ def init_parser():
         nargs='+', 
         type=str, 
         default=['All'], 
-        help='Solutions wiht the specified languages')
+        help='Solutions with the specified languages (C, JAVA, PYTH)')
 
-     #status_code
+    #status_code
     parser.add_argument(
         '-sc', 
         nargs='+', 
         type=str, 
         default=['AC'], 
-        help='Solutions with specific status')
+        help='Solutions with specific status (AC, WA, TLE)')
     
     return parser

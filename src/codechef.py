@@ -84,19 +84,33 @@ def get_solution_links(solutions_table):
     solution_links = [link_tag['href'] for link_tag in solution_link_tags]
     return solution_links
 
+def get_solution_languages(solutions_table):
+    table_rows = solutions_table.findAll('tr')
+    solution_languages = []
+    for row in table_rows:
+        td = row.findAll('td')
+        if len(td) > 0:
+            solution_languages.append('_'.join(td[6].text.split(' ')))
+    return solution_languages
+
 def get_solution_details(data):
     solutions_table = data.find("table", {"class": "dataTable"})
     user_names = get_user_names(solutions_table)
     solution_links = get_solution_links(solutions_table)
-    return {"user_names": user_names, "solution_links": solution_links}
+    solution_languages = get_solution_languages(solutions_table)
+    return {"user_names": user_names, "solution_links": solution_links, "solution_languages": solution_languages}
 
 def extract_solution_code(data):
-    codes_list = data.find("div", {"id": "solutiondiv"}).find('ol').findAll('li')
+    ol = data.find("div", {"id": "solutiondiv"}).find('ol')
+    codes_list = []
+    if ol:
+        codes_list = ol.findAll('li')
+    
     return '\n'.join([code_line.text for code_line in codes_list]).encode('utf-8').strip()
 
 def save_solution(solution_code, solution_id, user_name, extension, problem_code, language, status):
     HOME_DIR = expanduser("~") 
-    PROBLEM_DIR = HOME_DIR + '/Codechef_solution_downloader/' + problem_code + '/' + language + '/' + status
+    PROBLEM_DIR = HOME_DIR + '/Codechef_Solution_Downloader/' + problem_code + '/' + extension.split('.')[1] + '/' + status
     problem_file = os.path.normpath(PROBLEM_DIR + '/' + user_name + '_' + solution_id + extension)
     if not os.path.isdir(PROBLEM_DIR):
         os.makedirs(PROBLEM_DIR)
@@ -105,14 +119,14 @@ def save_solution(solution_code, solution_id, user_name, extension, problem_code
         print "Writing solution to the file " + problem_file
         file_handle.write(solution_code)
 
-def download_solutions(solution_links, user_names, extension, problem_code, language, status):
+def download_solutions(solution_links, user_names, solution_languages, problem_code, language, status, extensions):
     base_url = get_url(URL_TYPES['BASE'])
-    print "Downloading " + status + " solutions for " + language
+    print "Downloading " + status + " solutions for " + problem_code
     for i in range(0, len(solution_links)):
         url = base_url + solution_links[i]
         data = get_url_data(url)
         solution_code = extract_solution_code(data)
-        save_solution(solution_code, solution_links[i].split('/')[2], user_names[i], extension, problem_code, language, status)
+        save_solution(solution_code, solution_links[i].split('/')[2], user_names[i], extensions[solution_languages[i]], problem_code, language, status)
         
 def get_solutions(pages, languages, status, problem_code, language_codes, status_codes, extensions):
     try:
@@ -137,8 +151,9 @@ def get_solutions(pages, languages, status, problem_code, language_codes, status
                         total_pages = 0
                         break
                     solution_details = get_solution_details(data)
-                    download_solutions(solution_details["solution_links"], solution_details["user_names"], extensions[lang_key], problem_code, lang_key, status_key)
+                    download_solutions(solution_details["solution_links"], solution_details["user_names"], solution_details["solution_languages"], problem_code, lang_key, status_key, extensions)
                 if total_pages == 0:
+                    print "Getting solutions from " + url
                     print "No " + status_key + " solutions available in " + lang_key
     except (ProblemNotFoundException, InvalidLanguageException, InvalidStatusException) as e:
         print ''.join(e.args)
