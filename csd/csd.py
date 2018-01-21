@@ -158,11 +158,11 @@ def get_solutions(pages, languages, status, problem_code, language_codes, status
     except (ProblemNotFoundException, InvalidLanguageException, InvalidStatusException) as e:
         print ''.join(e.args)
         sys.exit()                
-    
-if __name__ == "__main__":
+
+def main():
     parser = argparser.init_parser()
     args = parser.parse_args()
-    
+
     pages = args.p 
     languages = map(lambda x: x.upper(), args.l)
     status = map(lambda x: x.upper(), args.sc)
@@ -173,3 +173,7 @@ if __name__ == "__main__":
     status_codes = utils.load_config_file(CONFIG_FILES["STATUS_CODES"]) # AC, WA, TLE, etc ...
 
     get_solutions(pages, languages, status, problem_code, language_codes, status_codes, extensions)
+
+if __name__ == "__main__":
+    main()
+    
