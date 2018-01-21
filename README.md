@@ -1,4 +1,4 @@
-# codechef_solutions_downloader
+# CodechefSolutionDownloader (CSD)
 Python script to download code chef solutions for a problem
 
 # Chef is cooking 🔥🔥🔥
