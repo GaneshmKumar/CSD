@@ -12,7 +12,7 @@ Python script to download code chef solutions for a problem
 3. `python setup.py install`
 
 # Usage
-`csd -pc maxsc -l c java pyth -sc ac wa -p 1`
+`csd -pc MAXSC -l C JAVA PYTH -sc AC WA -p 1`
 
 * -pc - problem code
 * -l - programming languages (c, java, pyth, etc..) #By default all languages will be downloaded
