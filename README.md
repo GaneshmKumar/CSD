@@ -1,7 +1,7 @@
 # Codechef Solution Downloader (CSD)
 Python script to download code chef solutions for a problem
 
-# Modules used
+# Modules Used
 * requests==2.17.3
 * beautifulsoup4==4.6.0
 * argparse==1.1
